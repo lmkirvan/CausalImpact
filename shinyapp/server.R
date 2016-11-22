@@ -26,18 +26,15 @@ shinyServer(function(input, output) {
     post_start <- as.Date(input$post_period[1])
     post_end <- as.Date(input$post_period[2])
 
-    # Load Pageview Counts.  
-    start_timestamp <- pageview_timestamps(pre_start) # convert to 'yymmddhh'
-    end_timestamp <- pageview_timestamps(post_end)    # convert to 'yymmddhh'
-    y_pageviews <- article_pageviews(article = input$y_article, 
-      start = start_timestamp, end = end_timestamp)
-    x1_pageviews <- article_pageviews(article = input$x1_article,
-      start = start_timestamp, end = end_timestamp)
-    x2_pageviews <- article_pageviews(article = input$x2_article,
-      start = start_timestamp, end = end_timestamp)
-    x3_pageviews <- article_pageviews(article = input$x3_article,
-      start = start_timestamp, end = end_timestamp)
-          
+    # Load Pageview Counts.
+    start_timestamp <- substring(pageview_timestamps(pre_start), 0, 10) # convert to 'yymmddhh'
+    end_timestamp   <- substring(pageview_timestamps(post_end) , 0, 10)    # convert to 'yymmddhh'
+    
+    y_pageviews <- article_pageviews(article = input$y_article, start = start_timestamp, end = end_timestamp)
+    x1_pageviews <- article_pageviews(article = input$x1_article, start = start_timestamp, end = end_timestamp)
+    x2_pageviews <- article_pageviews(article = input$x2_article, start = start_timestamp, end = end_timestamp)
+    x3_pageviews <- article_pageviews(article = input$x3_article, start = start_timestamp, end = end_timestamp)
+
     # Create Data Set
     #   From the dataframes above, create data sets of time series consisting 
     #   of the response variable y and predictors x[i].
