@@ -8,15 +8,22 @@
 FROM ubuntu:16.04
 
 # File Author / Maintainer
-MAINTAINER Kyle Polich / kyle@dataskeptic.com
+MAINTAINER Johannes Tynes / johannes@inpirical.com
 
 # Update the repository sources list
+#RUN apt-get update
+
+# Getting the App Ready
+RUN dpkg --configure -a --force-all
+RUN apt-get clean
 RUN apt-get update
+RUN apt-get -y -f install libssl-dev
+RUN apt-get -y install libcurl4-openssl-dev
+
 
 # Installation
 # ------------------------------------------------------------------------------
 
-RUN apt-get install libssl-dev
 
 # R (latest version from CRAN)
 # --------------------------------------
@@ -35,12 +42,8 @@ RUN apt-get update
 
 # 5. Install R. (-y flag to automatically answer Yes when asked if we are sure we want to download the package):
 
-RUN apt-get install r-base
-RUN apt-get install libcurl4-openssl-dev
+RUN apt-get -y install r-base
 
-# Not required but very helpful
-# --------------------------------------
-RUN apt-get install net-tools
 
 # Shiny Server
 # --------------------------------------
@@ -61,35 +64,24 @@ RUN chown -R shiny /srv/shiny-server
 
 # 3. Clone the shiny app into the default server directory:
 RUN apt-get install -y git
-RUN git clone https://github.com/data-skeptic/CausalImpact /srv/shiny-server
+RUN git clone https://github.com/kjblakemore/CausalImpact/ /srv/shiny-server
 # Move files to the default location specified in `shiny-server.conf`
 RUN mv /srv/shiny-server/shinyapp/* /srv/shiny-server/
 COPY global.R /srv/shiny-server/
-
-# Getting the App Ready
-RUN apt-get -y install libssl-dev
-RUN apt-get -y install libcurl4-openssl-dev
 
 
 # Installing R packages
 # --------------------------------------
 WORKDIR "/srv/shiny-server"
+RUN Rscript /srv/shiny-server/global.R
+
 
 # Start shiny-server
 # --------------------------------------
-RUN systemctl start shiny-server
+USER shiny
 
-R -e "install.packages('shiny', repos='http://cran.rstudio.com/')"
-R -e "install.packages('devtools', repos='http://cran.rstudio.com/')"
-R -e "install.packages('causalimpact', repos='http://cran.rstudio.com/')"
-R -e "devtools::install_github('google/CausalImpact')"
-
-R -e "shiny::runApp('/srv/shiny-server', host='0.0.0.0', port=2718)"
-
-
-# Expose - Since Shiny picks random ports, I picked this as my "official"
-#          port.  I list it here as a hint that this is the port you want
-#          to expose.  You will need to expose it when you run the
-#          container.
-
-EXPOSE 2718
+# Expose the port
+# --------------------------------------
+EXPOSE 3838
+#CMD systemctl start shiny-server
+CMD shiny-server
