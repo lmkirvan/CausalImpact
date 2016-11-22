@@ -8,7 +8,7 @@
 FROM ubuntu:16.04
 
 # File Author / Maintainer
-MAINTAINER Johannes Tynes / johannes@inpirical.com
+MAINTAINER Kyle Polich / kyle@dataskeptic.com
 
 # Update the repository sources list
 #RUN apt-get update
@@ -64,7 +64,7 @@ RUN chown -R shiny /srv/shiny-server
 
 # 3. Clone the shiny app into the default server directory:
 RUN apt-get install -y git
-RUN git clone https://github.com/kjblakemore/CausalImpact/ /srv/shiny-server
+RUN git clone https://github.com/data-skeptic/CausalImpact.git /srv/shiny-server
 # Move files to the default location specified in `shiny-server.conf`
 RUN mv /srv/shiny-server/shinyapp/* /srv/shiny-server/
 COPY global.R /srv/shiny-server/
