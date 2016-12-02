@@ -84,4 +84,5 @@ USER shiny
 # --------------------------------------
 EXPOSE 3838
 #CMD systemctl start shiny-server
-CMD shiny-server
+#CMD shiny-server
+CMD R -e "shiny::runApp('.', host='0.0.0.0', port=3838)"
