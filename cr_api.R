@@ -11,10 +11,10 @@ get_complaints <- function(api_endpoint = "https://data.consumerfinance.gov/reso
   pages <- as.character(seq(from = 0 , to = count, by = 50000))
   df <- data.frame()
   for(i in 1:length(pages)){
-    temp <- read.csv(file = paste(base_url, 
-                                  offset = paste("&$offset=", pages[i], sep = ""),
-                                  selects, 
-                                  filters, 
+    temp <- read.csv(file = paste(base_url,
+                                  filters,
+                                  paste("&$offset=", pages[i], sep = ""),
+                                  selects,
                                   sep = ""),
                      stringsAsFactors = F)
     df <- rbind(df, temp)
@@ -23,8 +23,6 @@ get_complaints <- function(api_endpoint = "https://data.consumerfinance.gov/reso
 }
 
 
-df <- get_complaints(selects = "&$select=company,product")
 
-companies <- unique(df$company)
-products <- unique(df$product)
-rm(df)
+
+

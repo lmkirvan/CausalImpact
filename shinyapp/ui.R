@@ -1,4 +1,10 @@
-library(shiny)
+df <- get_complaints(selects = "&$select=company,product")
+
+companies <- unique(df$company)
+products <- unique(df$product)
+
+rm(df)
+
 
 shinyUI(fluidPage(theme = "bootstrap.css",
   tags$head(
@@ -7,17 +13,24 @@ shinyUI(fluidPage(theme = "bootstrap.css",
   div(
     titlePanel("Causal Impact on Wikipedia analysis"),
     p(
-        span("Learn more about this Shiny app, how we built it, and why, visit "),
-        a("http://dataskeptic.com/l/snl-impact", href='http://dataskeptic.com/l/snl-impact')
+        span("A shiny app for causal impact analysis of consumer financial complaints")
     )
     , class="header"
   ),
   sidebarLayout(
     sidebarPanel(
-      textInput('y_article', 'Article:', 'Courtney Barnett'),
-      textInput('x1_article', 'Control Article 1:', 'Joshua Tillman'),
-      textInput('x2_article', 'Control Article 2:', 'Sleater Kinney'),
-      textInput('x3_article', 'Control Article 3:', 'Sharon Van Etten'),
+      selectizeInput('y_company', label = "Company to test", choices = companies, 
+                     selected = "Bank of America", multiple = FALSE,
+                     options = NULL),
+      selectizeInput('x1_company', label = "Control company", choices = companies, 
+                     selected = "Bank of America", multiple = FALSE,
+                     options = NULL),
+      selectizeInput('x2_company', label = "Control company", choices = companies, 
+                     selected = "Bank of America", multiple = FALSE,
+                     options = NULL),
+      selectizeInput('x3_company', label = "Control company", choices = companies, 
+                     selected = "Bank of America", multiple = FALSE,
+                     options = NULL),
       dateRangeInput('pre_period', 'Pre-period:', start = '2016-05-13', end = '2016-05-21'),
       dateRangeInput('post_period', 'Post-period:', start = '2016-05-22', end = '2016-05-27'),
       actionButton("submit", "Run analysis")
@@ -28,3 +41,5 @@ shinyUI(fluidPage(theme = "bootstrap.css",
     )
   )
 ))
+
+
