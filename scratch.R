@@ -18,7 +18,7 @@ y_pageviews <- get_complaints(selects = "&$select=date_trunc_ymd(date_received),
                               filters = sprintf("&company=%s", gsub("Citibank", pattern = " ",
                                                                     replacement = "%20")),
                               date_range = paste("&$where=date_received%20between%20","'",
-                                                 pre_start,"'","%20and%20","'",post_end,"'",sep=""))
+                                                 pre_start,"'","%20and%20","'",post_end,"'",sep=""), sep = "")
 
 y_pageviews <- y_pageviews %>% 
   `colnames<-`(c("company","date")) %>% 

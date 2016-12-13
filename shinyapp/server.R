@@ -5,8 +5,8 @@ library(tidyr)
 library(stringr)
 
 
-load("C:\\Users\\kirvanl\\Desktop\\R_Workspaces\\CausalImpact\\shinyapp\\companies.RData")
-load("C:\\Users\\kirvanl\\Desktop\\R_Workspaces\\CausalImpact\\shinyapp\\products.RData")
+load("companies.RData")
+load("products.RData")
 
 
 get_complaints <- function(api_endpoint = "https://data.consumerfinance.gov/resource/jhzv-w97w.csv?$$app_token=%s&$limit=50000", 
@@ -88,8 +88,8 @@ shinyServer(function(input, output) {
                                                                         replacement = "%20")),
                                   date_range = paste("&$where=date_received%20between%20","'",
                                                      pre_start,"'","%20and%20","'",post_end,"'",sep=""),
-                                  products = paste("&product=",gsub(input$products, pattern = " ",
-                                                                    replacement = "%20", sep = ""))
+                                  products = paste("&product=", gsub(input$products, pattern = " ",
+                                                                    replacement = "%20"), sep = ""))
     
     
     
@@ -103,8 +103,8 @@ shinyServer(function(input, output) {
                                                                          replacement = "%20")),
                                    date_range = paste("&$where=date_received%20between%20","'",
                                                       pre_start,"'","%20and%20","'",post_end,"'",sep=""),
-                                   products = paste("&product=",gsub(input$products, pattern = " ",
-                                                                     replacement = "%20", sep = ""))
+                                   products = paste("&product=", gsub(input$products, pattern = " ",
+                                                                     replacement = "%20"), sep = ""))
     
     x1_pageviews <- x1_pageviews %>% 
       `colnames<-`(c("company","date")) %>% 
@@ -116,8 +116,8 @@ shinyServer(function(input, output) {
                                                                          replacement = "%20")),
                                    date_range = paste("&$where=date_received%20between%20","'",
                                                       pre_start,"'","%20and%20","'",post_end,"'", sep=""),
-                                   products = paste("&product=",gsub(input$products, pattern = " ",
-                                                                     replacement = "%20", sep = ""))
+                                   products = paste("&product=", gsub(input$products, pattern = " ",
+                                                                     replacement = "%20"), sep = ""))
     
     x2_pageviews <- x2_pageviews %>% 
       `colnames<-`(c("company","date")) %>% 
@@ -130,8 +130,8 @@ shinyServer(function(input, output) {
                                                                          replacement = "%20")),
                                    date_range = paste("&$where=date_received%20between%20","'",
                                                       pre_start,"'","%20and%20","'",post_end,"'", sep=""),
-                                   products = paste("&product=",gsub(input$products, pattern = " ",
-                                                                     replacement = "%20", sep = ""))
+                                   products = paste("&product=", gsub(input$products, pattern = " ",
+                                                                     replacement = "%20"), sep = ""))
     
     
     x3_pageviews <- x3_pageviews %>% 
@@ -162,11 +162,11 @@ shinyServer(function(input, output) {
   })
 
   output$plots <- renderPlot({
-    plot(impact)
+    plot(impact())
   })
 
   output$summary <- renderPrint({
-    summary(impact)
+    summary(impact())
   })
 })
 
