@@ -9,6 +9,24 @@ load("C:\\Users\\kirvanl\\Desktop\\R_Workspaces\\CausalImpact\\shinyapp\\compani
 load("C:\\Users\\kirvanl\\Desktop\\R_Workspaces\\CausalImpact\\shinyapp\\products.RData")
 
 
+mgsub <- function(pattern, replacement, x, ...) {
+  if (length(pattern)!=length(replacement)) {
+    stop("pattern and replacement do not have the same length.")
+  }
+  result <- x
+  for (i in 1:length(pattern)) {
+    result <- gsub(pattern[i], replacement[i], result, ...)
+  }
+  result
+}
+
+
+pat <- c("&", " ")
+
+rep <- c("%26", "%20")
+
+
+
 get_complaints <- function(api_endpoint = "https://data.consumerfinance.gov/resource/jhzv-w97w.csv?$$app_token=%s&$limit=50000", 
                            selects = NULL, 
                            filters = NULL,
@@ -84,13 +102,12 @@ shinyServer(function(input, output) {
     #input$x3_article <- gsub(input$x3_article, pattern = " ", replacement = "%20")
     
     y_pageviews <- get_complaints(selects = "&$select=date_trunc_ymd(date_received),company",
-                                  filters = sprintf("&company=%s", gsub(input$y_company, pattern = " ",
-                                                                        replacement = "%20")),
+                                  filters = sprintf("&company=%s", mgsub(input$y_company, pattern = pat,
+                                                                        replacement = rep)),
                                   date_range = paste("&$where=date_received%20between%20","'",
                                                      pre_start,"'","%20and%20","'",post_end,"'",sep=""),
                                   products = paste("&product=", gsub(input$products, pattern = " ",
                                                                     replacement = "%20"), sep = ""))
-    
     
     
     y_pageviews <- y_pageviews %>% 
@@ -101,8 +118,8 @@ shinyServer(function(input, output) {
     
     
     x1_pageviews <- get_complaints(selects = "&$select=date_trunc_ymd(date_received),company",
-                                   filters = sprintf("&company=%s", gsub(input$x1_company, pattern = " ",
-                                                                         replacement = "%20")),
+                                   filters = sprintf("&company=%s", mgsub(input$x1_company, pattern = pat,
+                                                                         replacement = rep)),
                                    date_range = paste("&$where=date_received%20between%20","'",
                                                       pre_start,"'","%20and%20","'",post_end,"'",sep=""),
                                    products = paste("&product=", gsub(input$products, pattern = " ",
@@ -117,8 +134,8 @@ shinyServer(function(input, output) {
     
     
     x2_pageviews <- get_complaints(selects = "&$select=date_trunc_ymd(date_received),company", 
-                                   filters = sprintf("&company=%s", gsub(input$x2_company, pattern = " ", 
-                                                                         replacement = "%20")),
+                                   filters = sprintf("&company=%s", mgsub(input$x2_company, pattern = pat, 
+                                                                         replacement = rep)),
                                    date_range = paste("&$where=date_received%20between%20","'",
                                                       pre_start,"'","%20and%20","'",post_end,"'", sep=""),
                                    products = paste("&product=", gsub(input$products, pattern = " ",
@@ -133,8 +150,8 @@ shinyServer(function(input, output) {
     
     
     x3_pageviews <- get_complaints(selects = "&$select=date_trunc_ymd(date_received),company",
-                                   filters = sprintf("&company=%s", gsub(input$x3_company, pattern = " ",
-                                                                         replacement = "%20")),
+                                   filters = sprintf("&company=%s", mgsub(input$x3_company, pattern = pat,
+                                                                         replacement = rep)),
                                    date_range = paste("&$where=date_received%20between%20","'",
                                                       pre_start,"'","%20and%20","'",post_end,"'", sep=""),
                                    products = paste("&product=", gsub(input$products, pattern = " ",
@@ -177,7 +194,7 @@ shinyServer(function(input, output) {
   })
 
   output$summary <- renderPrint({
-    summary(impact(), type = "report")
+    summary(impact())
   })
 })
 
