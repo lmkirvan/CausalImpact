@@ -29,8 +29,8 @@ shinyUI(fluidPage(theme = "bootstrap.css",
       selectizeInput('x3_company', label = "Control company", choices = companies, 
                      selected = "Synchrony Financial", multiple = FALSE,
                      options = NULL),
-      dateRangeInput('pre_period', 'Pre-period:', start = '2016-01-01', end = '2016-06-20'),
-      dateRangeInput('post_period', 'Post-period:', start = '2016-06-21', end = '2016-12-11'),
+      dateRangeInput('pre_period', 'Pre-period:', start = '2016-01-03', end = '2016-06-18'),
+      dateRangeInput('post_period', 'Post-period:', start = '2016-06-26', end = '2016-12-10'),
       actionButton("submit", "Run analysis")
     ),
     mainPanel(
